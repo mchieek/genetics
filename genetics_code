@@ -1,16 +1,16 @@
 import sqlite3
 
 # Connect to the database
-with sqlite3.connect('data/sample.db') as connection:
+with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
     # Issue a query
     results = connection.execute('''
-        SELECT artistId, name
-        FROM artists
+        SELECT trait_id, trait
+        FROM traits
     ''')
 
     # Print the results
-    artists = []
-    for artist_id, name in results:
-        artists.append(name)
+    #artists = []
+    #for artist_id, name in results:
+        #artists.append(name)
 
 print(artists)
