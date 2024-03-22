@@ -1,1 +1,16 @@
+import sqlite3
 
+# Connect to the database
+with sqlite3.connect('data/sample.db') as connection:
+    # Issue a query
+    results = connection.execute('''
+        SELECT artistId, name
+        FROM artists
+    ''')
+
+    # Print the results
+    artists = []
+    for artist_id, name in results:
+        artists.append(name)
+
+print(artists)
