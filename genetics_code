@@ -14,3 +14,21 @@ with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
         #subjects.append(trait)
 
 print(artists)
+
+import sqlite3
+
+# Connect to the database
+with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
+    # Issue a query
+    results = connection.execute('''
+        SELECT trait_id, trait
+        FROM traits
+        WHERE trait LIKE "%type 2 diabetes%"                         
+    ''')
+
+    # Print the results
+    subjects = []
+    for trait_id, trait in results:
+        subjects.append(set(trait_id, trait))
+
+print(subjects)
