@@ -2,17 +2,27 @@ import sqlite3
 
 # Connect to the database
 with sqlite3.connect('gwas_data.db') as connection:
-    # Issue a query
-    results = connection.execute('''
-        SELECT accession_id, population, type, sample_size
+    # Count the number of albums
+    result = connection.execute('''
+        SELECT COUNT(*), accession_id
         FROM populations
         WHERE accession_id LIKE "GCST001583"
-        ORDER BY sample_size DESC                              
+    ''').fetchone()  # fetchone() returns a single row
+
+    # Print the result
+    print(f'There are {result[0]} studies in the database.')
+
+    # Sum the total sample size for this population
+    results_b = connection.execute('''
+        SELECT COUNT(*), accession_id, type, SUM(sample_size)
+        FROM populations
+        WHERE accession_id LIKE "GCST001583"
+        GROUP BY type
     ''')
 
-    # Print the results
-    subjects = []
-    for row in results:
-        subjects.append(row)
-
-print(subjects)
+    # Print the first 5 results
+    list = []
+    for result in results_b:
+        list.append(result)
+    
+    print(list)
