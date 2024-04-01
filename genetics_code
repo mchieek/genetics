@@ -1,37 +1,18 @@
 import sqlite3
 
 # Connect to the database
-with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
+with sqlite3.connect('gwas_data.db') as connection:
     # Issue a query
     results = connection.execute('''
-        SELECT trait_id, trait
-        FROM traits
+        SELECT accession_id, population, type, sample_size
+        FROM populations
+        WHERE accession_id LIKE "GCST001583"
+        ORDER BY sample_size DESC                              
     ''')
 
     # Print the results
     subjects = []
-    for trait_id, trait in results:
-        #subjects.append(trait)
+    for row in results:
+        subjects.append(row)
 
-print(artists)
-
-import sqlite3
-
-# Connect to the database
-with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
-    # Issue a query
-    results = connection.execute('''
-        SELECT trait_id, trait, study_accessions
-        FROM traits
-        WHERE trait LIKE "%type 2 diabetes%"                                                                    
-    ''')
-
-    # Print the results
-    subjects = []
-    for trait in results:
-    #     subject = set() 
-    #     subject.add(trait_id)
-    #     subject.add(trait)
-    #     subjects.append(set(trait_id, trait))
-
-print(f"{trait} has {} results associated with it")
+print(subjects)
