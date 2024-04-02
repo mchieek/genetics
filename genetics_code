@@ -1,6 +1,6 @@
 import sqlite3
 
-# Step A
+# Step 1
 with sqlite3.connect('gwas_data.db') as connection:
     # Select studies with a specific accession_id
     results_a = connection.execute('''
@@ -17,7 +17,7 @@ with sqlite3.connect('gwas_data.db') as connection:
 
 print(subjects)
 
-# Step B
+# Step 2
 with sqlite3.connect('gwas_data.db') as connection:
     # Count the number of studies for a specific accession_id
     result_b = connection.execute('''
@@ -37,10 +37,25 @@ with sqlite3.connect('gwas_data.db') as connection:
         GROUP BY accession_id, type
     ''')
 
-    # Print the results of step B
+    # Print the results of step 2
     results_b_list = []
     for result in results_b:
         results_b_list.append(result)
     print(results_b_list)
 
-# Step C
+# Step 3
+with sqlite3.connect('gwas_data.db') as connection:
+    # Join the populations and study_accessions tables by accession_id
+    results_c = connection.execute('''
+        SELECT COUNT(*), populations.accession_id, type, SUM(sample_size)
+        FROM populations
+        JOIN study_accessions ON study_accessions.accession_id = populations.accession_id
+        WHERE type IN ("Cases", "Controls")
+        GROUP BY populations.accession_id, type
+    ''')
+
+    # Print the first 5 results
+    results_c_list = []
+    for result in results_c.fetchmany(5):
+        results_c_list.append(result)
+    print(results_c_list)
