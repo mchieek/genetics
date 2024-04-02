@@ -1,28 +1,46 @@
 import sqlite3
 
-# Connect to the database
+# Step A
 with sqlite3.connect('gwas_data.db') as connection:
-    # Count the number of albums
-    result = connection.execute('''
+    # Select studies with a specific accession_id
+    results_a = connection.execute('''
+        SELECT accession_id, population, type, sample_size
+        FROM populations
+        WHERE accession_id LIKE "GCST001583"
+        ORDER BY sample_size DESC
+    ''')
+
+    # Print the results
+    subjects = []
+    for row in results_a:
+        subjects.append(row)
+
+print(subjects)
+
+# Step B
+with sqlite3.connect('gwas_data.db') as connection:
+    # Count the number of studies for a specific accession_id
+    result_b = connection.execute('''
         SELECT COUNT(*), accession_id
         FROM populations
         WHERE accession_id LIKE "GCST001583"
     ''').fetchone()  # fetchone() returns a single row
 
-    # Print the result
-    print(f'There are {result[0]} studies in the database.')
+    # Print the studies count
+    print(f'There are {result_b[0]} studies in the database.')
 
-    # Sum the total sample size for this population
+    # Sum the total sample size for populations of three studies
     results_b = connection.execute('''
         SELECT COUNT(*), accession_id, type, SUM(sample_size)
         FROM populations
-        WHERE accession_id LIKE "GCST001583"
-        GROUP BY type
+        WHERE accession_id IN ("GCST001583", "GCST90274862", "GCST90280184")
+        GROUP BY accession_id, type
     ''')
 
-    # Print the first 5 results
-    list = []
+    # Print the results of step B
+    results_b_list = []
     for result in results_b:
-        list.append(result)
-    
-    print(list)
+        results_b_list.append(result)
+    print(results_b_list)
+
+# Step C
