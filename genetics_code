@@ -74,3 +74,25 @@ with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
     for result in results_d.fetchmany(5):
         results_d_list.append(result)
     print(results_d_list)
+
+# Additional Step
+import sqlite3
+
+trait_of_interest = input("What is the trait_id of your trait of interest?")
+
+with sqlite3.connect('gwas_data.db') as connection:
+    # Join the study_accessions, snp_accessions, and snps tables
+    results_d = connection.execute(f'''
+        SELECT trait_id, gene, COUNT(*)
+        FROM snp_accessions 
+        JOIN study_accessions ON snp_accessions.accession_id = study_accessions.accession_id
+        JOIN snps ON snp_accessions.snp_id = snps.snp_id
+        WHERE trait_id LIKE "{trait_of_interest}"
+        GROUP BY gene
+        ORDER BY COUNT(*) DESC
+        ''')
+    results_d_list = []
+    for result in results_d.fetchmany(5):
+        results_d_list.append(result)
+    print(results_d_list)
+
