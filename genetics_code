@@ -59,3 +59,18 @@ with sqlite3.connect('gwas_data.db') as connection:
     for result in results_c.fetchmany(5):
         results_c_list.append(result)
     print(results_c_list)
+
+
+import sqlite3
+
+with sqlite3.connect('mini-project_1/gwas_data.db') as connection:
+    # Join the populations and study_accessions tables by accession_id
+    results_d = connection.execute('''
+        SELECT DISTINCT snp_id AS trait_diabetes_type_2 FROM snp_accessions 
+        JOIN study_accessions ON snp_accessions.accession_id = snp_accessions.accession_id
+        WHERE trait_id LIKE "%EFO_0001645%"  
+        ''')
+    results_d_list = []
+    for result in results_d.fetchmany(5):
+        results_d_list.append(result)
+    print(results_d_list)
